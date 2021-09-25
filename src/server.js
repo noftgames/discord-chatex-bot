@@ -9,6 +9,7 @@ const jaysonServer = new jayson.Server(new Proxy({}, {
   get(target, name) {
     return async function (args, callback) {
       let fn = api[name];
+      console.log(`Requested ${name} with args: ${args.join(', ')}`);
       try {
         let result = await fn(...args);
         callback(null, result);
