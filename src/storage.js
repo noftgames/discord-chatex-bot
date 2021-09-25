@@ -87,7 +87,7 @@ module.exports = {
 
   async addUser(discord_id) {
     storage.users = storage.users || [];
-    let found = storage.find(item => item.discord_id === discord_id);
+    let found = storage.users.find(item => item.discord_id === discord_id);
     if (found) return;
     storage.users.push({discord_id});
     await this.save();
