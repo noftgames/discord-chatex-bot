@@ -17,6 +17,7 @@ class Bot {
     }
 
     async getResponse(interaction) {
+        return "hohohoh";
         switch (interaction.commandName) {
             case 'make_battle':
                 return this.makeBattle(interaction);

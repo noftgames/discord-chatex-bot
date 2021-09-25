@@ -35,6 +35,9 @@ const commands = [
     {
         name: 'make_battle_event',
         description: 'make_battle_event'
+    }, {
+      name: 'make_bid',
+      description: 'make new bid for the match'
     }
 ];
 
