@@ -163,6 +163,8 @@ const api = {
     return bets.find(item => item.invoice_id === id);
   },
   async onInvoiceUpdate(ivoice) {
+    if (ivoice.status !== 'COMPLETED') return;
+
     let bet = await api.getBetByInvoice(ivoice.id);
     let battle = await api.getBattleById(bet.battle_id);
     if (battle.status !== 'OPEN') return;
@@ -179,7 +181,7 @@ const api = {
     let battle = await api.getBattleById(bet.battle_id);
     if (battle.status !== 'FINISHED') return;
 
-    let user = await api.getUserByDiscord(bet.user_id);
+    let user = await api.getUserByDiscord(bet.user_discord_id);
     bet.status = 'DONE';
     await storage.updateBet(bet_id, bet);
     await payout(user.chatex_id, 'BTC', bet.prize);
