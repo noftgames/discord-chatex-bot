@@ -1,0 +1,7 @@
+const CLIENT_ID = '891242753948778526';
+const GUILD_ID = '891244538704855051';
+
+module.exports = {
+    GUILD_ID,
+    CLIENT_ID
+}
