@@ -27,6 +27,11 @@ app.use(bodyParser({json: true}));
 
 app.post(`/chatex-callback`, async (req, res) => {
   console.log(`new request: `, req.body);
+  try {
+    await api.onInvoiceUpdate(req.body);
+  } catch (err) {
+    console.error(err);
+  }
   res.sendStatus(200);
 });
 
