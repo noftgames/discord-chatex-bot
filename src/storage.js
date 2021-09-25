@@ -56,7 +56,6 @@ module.exports = {
   },
   async save() {
     fs.writeFileSync(FILENAME, JSON.stringify(storage, null, 2), 'utf8');
-    console.log(JSON.stringify(storage, null, 2));
   },
 
   async pushBattle(battle) {

@@ -109,7 +109,12 @@ const api = {
     return {...found};
   },
 
+  async makeUser(discord_id) {
+    await storage.addUser(discord_id);
+  }, 
   async saveChatexId(discord_id, chatex_id) {
+    let found = await this.getUserByDiscord(discord_id);
+    if (!found) await this.makeUser(discord_id);
     await storage.updateUser(discord_id, chatex_id);
   },
 
