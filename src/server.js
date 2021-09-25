@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const jayson = require('jayson');
 
 const api = require('./api');
-const jaysonServer = new jayson.Server(new Proxy({}, {
+const jaysonServer = new jayson.Server(new Proxy(api, {
   get(target, name) {
     return async function (args, callback) {
       let fn = api[name];

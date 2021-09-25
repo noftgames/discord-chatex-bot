@@ -14,6 +14,10 @@ const api = {
     return events;
   },
 
+  async loadStorage() {
+    await storage.load();
+  },
+
   async getOpenBattles() {
     let all = await storage.getBattles();
     return all.filter(item => item.status === 'OPEN');
