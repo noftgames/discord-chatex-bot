@@ -89,7 +89,7 @@ const api = {
       abilities: item.meta.attributes.reduce((accum, curr) => {accum[curr.trait_type] = curr.value; return accum;}, {})
     }));
 
-    await storage.addNofts(nofts);
+    await storage.setNofts(nofts);
   },
   async getNoftById(id) {
     let all = await storage.getNofts();
