@@ -14,6 +14,7 @@ const jaysonServer = new jayson.Server(new Proxy(api, {
         let result = await fn(...args);
         callback(null, result);
       } catch (err) {
+        console.error(err);
         callback(err);
       }
     }
