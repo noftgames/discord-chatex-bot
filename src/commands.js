@@ -1,7 +1,7 @@
 const {Routes} = require("discord-api-types/v9");
 const {REST} = require("@discordjs/rest");
 const {GUILD_ID, CLIENT_ID} = require("./config.js");
-const {BOT_TOKEN: token} = require("./token.json");
+const {BOT_TOKEN: token} = require("../token.json");
 const rest = new REST({version: '9'}).setToken(token);
 
 const commands = [

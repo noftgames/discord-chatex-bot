@@ -1,6 +1,6 @@
 const registerCommands = require('./commands');
 const {Client, Intents} = require("discord.js");
-const {BOT_TOKEN: token} = require("./token.json");
+const {BOT_TOKEN: token} = require("../token.json");
 
 class Bot {
     constructor() {
