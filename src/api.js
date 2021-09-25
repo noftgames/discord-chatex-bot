@@ -33,7 +33,7 @@ const api = {
     return battleObj;
   },
   async startBattle(id) {
-    let found = await this.getBattleById(id);
+    let found = await api.getBattleById(id);
     if (!found) { console.error(`Battle ${id} not found...`); return; }
     found.status = 'ONGOING';
     await storage.updateBattle(id, found);
@@ -41,13 +41,13 @@ const api = {
     return found;
   },
   async finishBattle(id, scores) {
-    let found = await this.getBattleById(id);
+    let found = await api.getBattleById(id);
     if (!found) { console.error(`Battle ${id} not found...`); return; }
     found.status = 'FINISHED';
     found.scores = [...scores];
     await storage.updateBattle(id, found);
 
-    let bets = (await this.getBetsByBattle(id)).filter(item => item.status === 'PROCESSED');
+    let bets = (await api.getBetsByBattle(id)).filter(item => item.status === 'PROCESSED');
     let winner = scores[0].noft_id;
     let winBets = bets.filter(item => item.noft_id === winner);
     if (winBets.length === 0) {
@@ -113,20 +113,20 @@ const api = {
     await storage.addUser(discord_id);
   }, 
   async saveChatexId(discord_id, chatex_id) {
-    let found = await this.getUserByDiscord(discord_id);
-    if (!found) await this.makeUser(discord_id);
+    let found = await api.getUserByDiscord(discord_id);
+    if (!found) await api.makeUser(discord_id);
     await storage.updateUser(discord_id, chatex_id);
   },
 
   async makeBet(user_discord_id, battle_id, noft_id, amount) {
-    let user = await this.getUserByDiscord(user_discord_id);
+    let user = await api.getUserByDiscord(user_discord_id);
     if (!user) { console.error(`User ${user_discord_id} not found...`); return };
     if (!user.chatex_id) { console.error(`Set chatex id first`); return };
 
-    let battle = await this.getBattleById(battle_id);
+    let battle = await api.getBattleById(battle_id);
     if (battle.status !== 'OPEN') { console.error(`Battle ${battle_id} doesn't open`); return }
 
-    let noft = await this.getNoftById(noft_id);
+    let noft = await api.getNoftById(noft_id);
     if (!noft) { console.error(`Noft ${noft_id} doesn't found`); return; }
     
     let id = `${user_discord_id}_${Date.now()}`;
@@ -163,8 +163,8 @@ const api = {
     return bets.find(item => item.invoice_id === id);
   },
   async onInvoiceUpdate(ivoice) {
-    let bet = await this.getBetByInvoice(ivoice.id);
-    let battle = await this.getBattleById(bet.battle_id);
+    let bet = await api.getBetByInvoice(ivoice.id);
+    let battle = await api.getBattleById(bet.battle_id);
     if (battle.status !== 'OPEN') return;
     if (ivoice.status === 'COMPLETED') {
       bet.status = 'PROCESSED';
@@ -172,14 +172,14 @@ const api = {
     }
   },
   async payBetPrize(bet_id) {
-    let bet = await this.getBetById(bet_id);
+    let bet = await api.getBetById(bet_id);
     if (bet.status !== 'PROCESSED') return;
     if (!bet.prize) return;
 
-    let battle = await this.getBattleById(bet.battle_id);
+    let battle = await api.getBattleById(bet.battle_id);
     if (battle.status !== 'FINISHED') return;
 
-    let user = await this.getUserByDiscord(bet.user_id);
+    let user = await api.getUserByDiscord(bet.user_id);
     bet.status = 'DONE';
     await storage.updateBet(bet_id, bet);
     await payout(user.chatex_id, 'BTC', bet.prize);
