@@ -4,6 +4,8 @@ const axios = require('axios');
 const EventEmitter = require('events');
 
 const storage = require('./storage');
+const chatex = require('./chatex');
+let chatexObj = null;
 
 const events = new EventEmitter();
 
@@ -177,14 +179,14 @@ const api = {
 
 };
 
-api.loadNofts().then(() => console.log('done'));
-
 module.exports = api;
 
 async function makeInvoice(chatex_id, coin, amount) {
-  return {id: 0};
+  chatexObj = chatexObj || (await chatex.auth());
+  return chatexObj.makeInvoice(chatex_id, coin, amount);
 }
 
 async function payout(chatex_id, coin, amount) {
-
+  chatexObj = chatexObj || (await chatex.auth());
+  return chatexObj.payout(chatex_id, coin, amount);
 }
