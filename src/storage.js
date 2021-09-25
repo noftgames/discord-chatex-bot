@@ -37,6 +37,7 @@ const fs = require('fs');
   - coin
   - amount
   - invoice_id
+  - invoice_url
   - battle_id
   - noft_id
   - status - DRAFT, PROCESSED, DONE

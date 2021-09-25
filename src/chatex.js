@@ -20,7 +20,7 @@ async function auth() {
         "callback_url": "https://chatex.noftgames.io/chatex-callback",
         "data": JSON.stringify({chatex_id})
       });
-      return data.payment_url;
+      return data;
     },
     async payout(chatex_id, coin, amount) {
       await apiPost(accessToken, '/wallet/transfers', {coin, amount, recipient: chatex_id, second_factor: {mode: 'PIN', code: '1111'}})

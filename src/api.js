@@ -132,7 +132,7 @@ const api = {
     let id = `${user_discord_id}_${Date.now()}`;
     let invoice = await makeInvoice(user.chatex_id, 'BTC', amount);
     let bet = {
-      id, user_discord_id, coin: 'BTC', amount, battle_id, noft_id, status: 'DRAFT', invoice_id: invoice.id, prize: 0
+      id, user_discord_id, coin: 'BTC', amount, battle_id, noft_id, status: 'DRAFT', invoice_id: invoice.id, invoice_url: invoice.payment_url, prize: 0
     }
     await storage.addBet(bet);
 
