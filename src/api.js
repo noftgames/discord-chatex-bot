@@ -79,7 +79,7 @@ const api = {
     });
     let data = response.data;
     let nofts = data.map(item => ({
-      id: item.tokenId,
+      id: item.tokenId.toString(),
       name: item.name,
       image_url: item.imageUrl,
       owner: item.owner,
@@ -185,6 +185,8 @@ const api = {
     bet.status = 'DONE';
     await storage.updateBet(bet_id, bet);
     await payout(user.chatex_id, 'BTC', bet.prize);
+
+    return true;
   }
 
 

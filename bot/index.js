@@ -42,7 +42,7 @@ client.on('interactionCreate', async interaction => {
       data = 'Command not found';
       break;
   }
-  await interaction.reply(JSON.stringify(data, null, 2));
+  await interaction.reply(JSON.stringify(data || {}, null, 2));
 
 	// if (commandName === 'ping') {
 	// 	await interaction.reply('Pong!');
