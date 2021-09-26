@@ -59,8 +59,8 @@ client.on('interactionCreate', async interaction => {
         `There is no noft with this ID. Check the list of nofts with the /open_battles`
       break;
     case 'bet':
-      await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))
-      data = 'The bets has been sent to processing. Confirm it with Chatex'
+      let result = await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))
+      data = 'The bets has been sent to processing. Confirm it with Chatex: ' + result.invoice_url;
       break;
     case 'my_bets':
       const myBets = await api.getBetsByUser(interaction.user.id);
