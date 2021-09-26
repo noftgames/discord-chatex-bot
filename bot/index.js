@@ -99,7 +99,7 @@ client.login(token);
 
 api.getEvents().on('new_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`⚔️ NEW BATTLE OPENED Battle ID: ${battle.id} Nofts: ${battle.nofts.join(', ')} Time: ${battle.timestamp}`);
+  await channel.send(`⚔️ NEW BATTLE OPENED Battle ID: ${battle.id} Nofts: ${battle.nofts.join(', ')}`);
 });
 api.getEvents().on('start_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
