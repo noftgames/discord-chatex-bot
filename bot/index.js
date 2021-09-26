@@ -30,13 +30,13 @@ client.on('interactionCreate', async interaction => {
     case 'open_battles':
       const battles = await api.getOpenBattles();
       data = battles.length ?
-        battles.reduce((acc, cur) => acc + `⚔️ Battle ID: ${cur.id} Status: ${cur.status} Nofts ${cur.nofts.join(' ')}\n`, '') :
+        battles.reduce((acc, cur) => acc + `⚔️ Battle ID: ${cur.id}  |  Status: ${cur.status}  |  Nofts ${cur.nofts.join(', ')}\n`, '') :
         '⛔️ No battles available.';
       break;
     case 'all_battles':
       const allBattles = await api.getAllBattles();
       data = allBattles.length ?
-        allBattles.reduce((acc, cur) => acc + `⚔️ Battle ID: ${cur.id} Status: ${cur.status} Nofts ${cur.nofts.join(' ')}\n`, '') :
+        allBattles.reduce((acc, cur) => acc + `⚔️ Battle ID: ${cur.id}  |  Status: ${cur.status}  |  Nofts ${cur.nofts.join(', ')}\n`, '') :
         '⛔️ No battles available.';
       break;
     case 'battle':
@@ -48,19 +48,24 @@ client.on('interactionCreate', async interaction => {
       const bets = await api.getBetsByBattle(battle.id);
       const sum = bets.reduce((acc, cur) => acc + cur, 0);
       data = battle.status === 'FINISHED' ?
-        `⚔️ ${battle.id} Battle Status ${battle.status} Bets Pool: ${sum} Winner: ${battle.srores[0].noft_id} Record https://dev.noftgames.io/game` :
-        `⚔️ ${battle.id} Battle Status ${battle.status} Bets Pool: ${sum}`;
+        `⚔️ ${battle.id} Battle Status ${battle.status}  |  Bets Pool: ${sum}  |  Winner: ${battle.srores[0].noft_id}  |  Record https://dev.noftgames.io/game` :
+        `⚔️ ${battle.id} Battle Status  |  ${battle.status}  |  Bets Pool: ${sum}`;
       break;
     case 'noft':
       const id = interaction.options.getString('noft_id');
       const noft = await api.getNoftById(id);
       data = noft ?
-        `${randomHeart()} Noft ${id} Abilities: (Vitality: ${noft.abilities.Vitality} Vision: ${noft.abilities.Vision} Power: ${noft.abilities.Power} Agility: ${noft.abilities.Agility} Speed: ${noft.abilities.Speed}  Luck: ${noft.abilities.Luck})` :
+        `${randomHeart()} Noft ${id}  |  Abilities: (Vitality: ${noft.abilities.Vitality}  |  Vision: ${noft.abilities.Vision}  |  Power: ${noft.abilities.Power}  |  Agility: ${noft.abilities.Agility}  |  Speed: ${noft.abilities.Speed}  |  Luck: ${noft.abilities.Luck})` :
         `⛔️ There is no noft with this ID. Check the list of nofts with the /open_battles`
       break;
     case 'bet':
-      let result = await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))
-      data = '📝 The bets has been sent to processing. Confirm it with Chatex: ' + result.invoice_url;
+      try {
+        let result = await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))
+        data = '📝 The bets has been sent to processing. Confirm it with Chatex: ' + result.invoice_url;
+      } catch (err) {
+        console.error(err);
+        data = '⛔️ You should login with chatex_id first';
+      }
       break;
     case 'my_bets':
       const myBets = await api.getBetsByUser(interaction.user.id);
@@ -68,7 +73,7 @@ client.on('interactionCreate', async interaction => {
       data = myBets.length ?
         myBets.reduce((acc, cur) => {
           const curBattle = allBattle.find(battle => battle.id === cur.battle_id);
-          return acc + `💰 Bet ID: ${cur.id}    |    Battle: ${cur.battle_id} Status: ${curBattle.status} Noft: ${cur.noft_id} Size: ${cur.amount} BTC\n`
+          return acc + `💰 Bet ID: ${cur.id}    |    Battle: ${cur.battle_id}  |  Status: ${curBattle.status}  |  Noft: ${cur.noft_id}  |  Size: ${cur.amount} BTC\n`
         }, '') :
         "⛔️ You haven't made any bets already. Make the first one with /bet";
       break;
@@ -103,7 +108,7 @@ client.login(token);
 
 api.getEvents().on('new_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`⚔️ NEW BATTLE OPENED Battle ID: ${battle.id} Nofts: ${battle.nofts.join(', ')}`);
+  await channel.send(`⚔️ NEW BATTLE OPENED Battle ID: ${battle.id}  |  Nofts: ${battle.nofts.join(', ')}`);
 });
 api.getEvents().on('start_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
@@ -111,7 +116,7 @@ api.getEvents().on('start_battle', async battle => {
 });
 api.getEvents().on('finish_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`🏆 BATTLE ${battle.id} FINISHED. Winner: ${battle.scores[0].noft_id} Record: https://dev.noftgames.io/game`);
+  await channel.send(`🏆 BATTLE ${battle.id} FINISHED. Winner: ${battle.scores[0].noft_id}  |  Record: https://dev.noftgames.io/game`);
 });
 api.getEvents().on('new_bet', async bet => {
   // let channel = client.channels.cache.get('891253162017693750');
@@ -121,7 +126,7 @@ api.getEvents().on('bet_processed', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
   let bets = (await api.getBetsByBattle(bet.battle_id)).filter(item => item.status === 'PROCESSED');
   let sum = bets.reduce((accum, curr) => accum + (+curr.amount), 0);
-  await channel.send(`🧾 BANK GOT BET ${bet.id} for battle ${bet.battle_id}. Bet: ${bet.amount} Award pool: ${sum}`);
+  await channel.send(`🧾 BANK GOT BET ${bet.id} for battle ${bet.battle_id}. Bet: ${bet.amount}  |  Award pool: ${sum}`);
 });
 api.getEvents().on('bet_paid', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
