@@ -17,7 +17,7 @@ async function auth() {
         "payment_system_id": 347,
         "country_code": "RUS",
         "lang_id": "RU",
-        "callback_url": "https://chatex.noftgames.io/chatex-callback",
+        "callback_url": "http://164.90.163.26:6666/chatex-callback",
         "data": JSON.stringify({chatex_id})
       });
       return data;
