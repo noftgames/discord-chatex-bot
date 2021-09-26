@@ -1,5 +1,8 @@
 'use strict';
 
+require('../bot/deploy-commands');
+require('../bot/index');
+
 const app = require('express')();
 const bodyParser = require('body-parser');
 const jayson = require('jayson');
