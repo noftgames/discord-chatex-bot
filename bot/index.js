@@ -91,7 +91,7 @@ client.on('interactionCreate', async interaction => {
         break;
       }
 
-      if (bet.noft_id !== betBattle.scores[0].noft_id) {
+      if (bet.noft_id != betBattle.scores[0].noft_id) {
         data = '⛔️ This bet hasn’t played. Try another one with /bet'
         break;
       }
