@@ -58,8 +58,12 @@ client.on('interactionCreate', async interaction => {
       break;
     case 'my_bets':
       const myBets = await api.getBetsByUser(interaction.user.id);
+      const allBattle = await api.getAllBattles();
       data = myBets.length ?
-        myBets.reduce((acc, cur) => acc + `Bet ID: ${cur.id}    |    Battle: ${cur.battle_id} Noft: ${cur.noft_id} Size: ${cur.amount} BTC\n`, '') :
+        myBets.reduce((acc, cur) => {
+          const curBattle = allBattle.find(battle => battle.id === cur.battle_id);
+          return acc + `Bet ID: ${cur.id}    |    Battle: ${cur.battle_id} Status: ${curBattle.status} Noft: ${cur.noft_id} Size: ${cur.amount} BTC\n`
+        }, '') :
         "You haven't made any bets already. Make the first one with /bet";
       break;
     case 'get_prize':
