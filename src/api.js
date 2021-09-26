@@ -3,6 +3,7 @@
 const axios = require('axios');
 const EventEmitter = require('events');
 
+const bot = require('../bot/index');
 const storage = require('./storage');
 const chatex = require('./chatex');
 let chatexObj = null;
@@ -30,6 +31,7 @@ const api = {
     let battleObj = {id, timestamp, status, nofts, scores};
     await storage.pushBattle(battleObj);
     events.emit('new_battle', battleObj);
+    bot.notifyNewBattle(battleObj);
     return battleObj;
   },
   async startBattle(id) {
@@ -38,6 +40,7 @@ const api = {
     found.status = 'ONGOING';
     await storage.updateBattle(id, found);
     events.emit('start_battle', found);
+    bot.notifyBattleStarted(found);
     return found;
   },
   async finishBattle(id, scores) {
@@ -63,6 +66,7 @@ const api = {
     }
 
     events.emit('finish_battle', found);
+    bot.notifyBattleFinished(found);
     return found;
   },
   async getBattlesByNoft(noftId) {
@@ -135,6 +139,8 @@ const api = {
       id, user_discord_id, coin: 'BTC', amount, battle_id, noft_id, status: 'DRAFT', invoice_id: invoice.id, invoice_url: invoice.payment_url, prize: 0
     }
     await storage.addBet(bet);
+
+    bot.notifyNewBet(bet);
 
     return bet;
   },
