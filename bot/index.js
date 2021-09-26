@@ -73,7 +73,8 @@ client.on('interactionCreate', async interaction => {
       data = myBets.length ?
         myBets.reduce((acc, cur) => {
           const curBattle = allBattle.find(battle => battle.id === cur.battle_id);
-          return acc + `💰 Bet ID: ${cur.id}    |    Battle: ${cur.battle_id}  |  Status: ${curBattle.status}  |  Noft: ${cur.noft_id}  |  Size: ${cur.amount} BTC\n`
+          if (!curBattle) return '';
+          return acc + `💰 Bet ID: ${cur.id} | Battle: ${cur.battle_id}  |  Status: ${curBattle.status}  |  Noft: ${cur.noft_id}  |  Size: ${cur.amount} BTC\n`
         }, '') :
         "⛔️ You haven't made any bets already. Make the first one with /bet";
       break;
