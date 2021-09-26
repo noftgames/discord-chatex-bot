@@ -64,6 +64,7 @@ module.exports = {
     let found = storage.battles.find(item => item.id === battle.id);
     if (found) return;
     battle.nofts = battle.nofts || [];
+    battle.nofts = battle.nofts.map(item => item.toString());
     storage.battles.push({...battle});
     await this.save();
   },
