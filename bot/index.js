@@ -43,17 +43,25 @@ client.on('interactionCreate', async interaction => {
       break;
   }
   await interaction.reply(JSON.stringify(data || {}, null, 2));
-
-	// if (commandName === 'ping') {
-	// 	await interaction.reply('Pong!');
-	// } else if (commandName === 'server') {
-	// 	await interaction.reply(`Server name: ${interaction.guild.name}\nTotal members: ${interaction.guild.memberCount}`);
-	// } else if (commandName === 'user') {
-	// 	await interaction.reply(`Your tag: ${interaction.user.tag}\nYour id: ${interaction.user.id}`);
-	// } else if (commandName === 'gif') {
-  //   console.log(interaction.options.getString('category'));
-  //   await interaction.reply('ok-ok');
-  // }
 });
 
 client.login(token);
+
+module.exports = {
+  notifyNewBattle(battle) {
+    let channel = client.channels.cache.get('891253162017693750');
+    await channel.send(`New battle opened: ${JSON.stringify(battle)}`);
+  },
+  notifyBattleStarted(battle) {
+    let channel = client.channels.cache.get('891253162017693750');
+    await channel.send(`Battle started: ${JSON.stringify(battle)}`);
+  },
+  notifyBattleFinished(battle) {
+    let channel = client.channels.cache.get('891253162017693750');
+    await channel.send(`Battle finished: ${JSON.stringify(battle)}`);
+  },
+  notifyNewBet(bet) {
+    let channel = client.channels.cache.get('891253162017693750');
+    await channel.send(`New bet: ${JSON.stringify(bet)}`);
+  }
+};
