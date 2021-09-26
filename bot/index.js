@@ -21,17 +21,27 @@ client.on('interactionCreate', async interaction => {
       await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
       data = 'Chatex ID has been saved.'
       break;
-    case 'battles':
+    case 'open_battles':
       const battles = await api.getOpenBattles();
       data = battles.length ?
-        battles.reduce((cur, acc) => acc + `Battle ID: ${cur.id} Status: ${cur.status}`, '') :
+        battles.reduce((acc, cur) => acc + `Battle ID: ${cur.id} Status: ${cur.status} Nofts ${battles.nofts.join(' ')}`) :
         'No battles available.';
       break;
     case 'battle':
-      data = await api.getBattleById(interaction.options.getString('battle_id'));
+      const battle = await api.getBattleById(interaction.options.getString('battle_id'));
+      if (!battle) return 'There is no match with this ID. Check the list of available matches with the command /open_battles'
+      const bets = await api.getBetsByBattle(battle.id);
+      const sum = bets.reduce((acc, cur) => acc + cur, 0);
+      data = battle.status === 'FINISHED' ?
+        `${battle.id} Battle Status ${battle.status} Bets Pool: ${sum} Winner: ${battle.srores[0].noft_id} Record https://dev.noftgames.io/game` :
+        `${battle.id} Battle Status ${battle.status} Bets Pool: ${sum}`;
       break;
     case 'noft':
-      data = await api.getNoftById(interaction.options.getString('noft_id'));
+      const id = interaction.options.getString('noft_id');
+      const noft = await api.getNoftById(id);
+      data = noft ?
+        `Noft ${id} Abilities: (Vitality: ${noft.abilities.vitality} Vision: ${noft.abilities.vision} Power: ${noft.abilities.power} Agility: ${noft.abilities.agility} Speed: ${noft.abilities.speed}  Luck: ${noft.abilities.luck})` :
+        `There is no noft with this ID. Check the list of nofts with the command /open_battles`
       break;
     case 'bet':
       data = await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))

@@ -14,7 +14,7 @@ const commands = [
     .addStringOption(option => option.setName('chatex_id').setDescription('Your Chatex ID').setRequired(true)),
 
   new SlashCommandBuilder()
-    .setName('battles')
+    .setName('open_battles')
     .setDescription('Show open for betting matches'),
 
   new SlashCommandBuilder()
