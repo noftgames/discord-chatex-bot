@@ -23,7 +23,11 @@ const jaysonServer = new jayson.Server(new Proxy(api, {
     }
   }
 }));
-api.loadStorage().then(() => console.log(`Storage loaded`));
+api.loadStorage()
+  .then(() => console.log(`Storage loaded`))
+  .then(() => api.loadNofts())
+  .then(() => console.log('Nofts loaded'));
+  
 jaysonServer.http().listen(process.env.RPC_PORT || 8081, () => console.log(`RPC started at port ${process.env.RPC_PORT || 8081}`));
 
 app.use(bodyParser({json: true}));
