@@ -127,5 +127,5 @@ api.getEvents().on('bet_paid', async bet => {
 function randomHeart() {
   let arr = ['❤️', '🧡', '💛', '💚', '💙', '💜', '🤎'];
   let rn = Math.round(Math.random() * arr.length);
-  return arr[rn];
+  return arr[rn] || '💜';
 }
