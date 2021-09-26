@@ -52,19 +52,19 @@ client.on('interactionCreate', async interaction => {
 client.login(token);
 
 module.exports = {
-  notifyNewBattle(battle) {
+  async notifyNewBattle(battle) {
     let channel = client.channels.cache.get('891253162017693750');
     await channel.send(`New battle opened: ${JSON.stringify(battle)}`);
   },
-  notifyBattleStarted(battle) {
+  async notifyBattleStarted(battle) {
     let channel = client.channels.cache.get('891253162017693750');
     await channel.send(`Battle started: ${JSON.stringify(battle)}`);
   },
-  notifyBattleFinished(battle) {
+  async notifyBattleFinished(battle) {
     let channel = client.channels.cache.get('891253162017693750');
     await channel.send(`Battle finished: ${JSON.stringify(battle)}`);
   },
-  notifyNewBet(bet) {
+  async notifyNewBet(bet) {
     let channel = client.channels.cache.get('891253162017693750');
     await channel.send(`New bet: ${JSON.stringify(bet)}`);
   }
