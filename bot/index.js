@@ -92,7 +92,7 @@ client.on('interactionCreate', async interaction => {
       data = 'Command not found';
       break;
   }
-  await interaction.reply(data);
+  await interaction.reply({content: data, ephemeral: true});
 });
 
 client.login(token);
