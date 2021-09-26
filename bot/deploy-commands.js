@@ -18,6 +18,10 @@ const commands = [
     .setDescription('Show open for betting matches'),
 
   new SlashCommandBuilder()
+    .setName('all_battles')
+    .setDescription('Show all battles'),
+
+  new SlashCommandBuilder()
     .setName('battle')
     .setDescription('Show info about the battle: a list of participants, the bets, results and a record of the match')
     .addStringOption(option => option.setName('battle_id').setDescription('Battle ID').setRequired(true)),
