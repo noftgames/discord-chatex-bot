@@ -115,7 +115,9 @@ api.getEvents().on('new_bet', async bet => {
 });
 api.getEvents().on('bet_processed', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`🧾 BANK GOT BET ${bet.id} for battle ${bet.battle_id}. Bet: ${bet.amount}`);
+  let bets = (await api.getBetsByBattle(bet.battle_id)).filter(item => item.status === 'PROCESSED');
+  let sum = bets.reduce((accum, curr) => accum + (+curr.amount), 0);
+  await channel.send(`🧾 BANK GOT BET ${bet.id} for battle ${bet.battle_id}. Bet: ${bet.amount} Award pool: ${sum}`);
 });
 api.getEvents().on('bet_paid', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
