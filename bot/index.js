@@ -27,6 +27,12 @@ client.on('interactionCreate', async interaction => {
         battles.reduce((acc, cur) => acc + `Battle ID: ${cur.id} Status: ${cur.status} Nofts ${cur.nofts.join(' ')}\n`, '') :
         'No battles available.';
       break;
+    case 'all_battles':
+      const allBattles = await api.getAllBattles();
+      data = allBattles.length ?
+        allBattles.reduce((acc, cur) => acc + `Battle ID: ${cur.id} Status: ${cur.status} Nofts ${cur.nofts.join(' ')}\n`, '') :
+        'No battles available.';
+      break;
     case 'battle':
       const battle = await api.getBattleById(interaction.options.getString('battle_id'));
       if (!battle) {
@@ -53,7 +59,7 @@ client.on('interactionCreate', async interaction => {
     case 'my_bets':
       const myBets = await api.getBetsByUser(interaction.user.id);
       data = myBets.length ?
-        myBets.reduce((acc, cur) => acc + `Bet ID: ${cur.id} Battle: ${cur.battle_id} Noft: ${cur.noft_id} Size: ${cur.amount} BTC\n`, '') :
+        myBets.reduce((acc, cur) => acc + `Bet ID: ${cur.id}    |    Battle: ${cur.battle_id} Noft: ${cur.noft_id} Size: ${cur.amount} BTC\n`, '') :
         "You haven't made any bets already. Make the first one with /bet";
       break;
     case 'get_prize':

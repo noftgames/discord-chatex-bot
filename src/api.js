@@ -22,6 +22,10 @@ const api = {
     let all = await storage.getBattles();
     return all.filter(item => item.status === 'OPEN');
   },
+
+  async getAllBattles() {
+    return storage.getBattles();
+  },
   async getBattleById(id) {
     let all = await storage.getBattles();
     return all.find(item => item.id === id);
