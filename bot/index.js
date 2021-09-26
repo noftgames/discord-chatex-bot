@@ -3,6 +3,7 @@
 const {Client, Intents} = require('discord.js');
 const {token} = require('./config.json');
 const api = require('../src/api');
+const chatex = require('../src/chatex');
 
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 
@@ -18,6 +19,11 @@ client.on('interactionCreate', async interaction => {
 
   switch (commandName) {
     case 'login':
+      let ok = await chatex.checkLogin(interaction.options.getString('chatex_id'));
+      if (!ok) {
+        data = 'This chatex ID doesn\'t exists';
+        break;
+      }
       await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
       data = 'Chatex ID has been saved.'
       break;
@@ -87,17 +93,25 @@ client.login(token);
 
 api.getEvents().on('new_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`New battle opened: ${JSON.stringify(battle)}`);
+  await channel.send(`⚔️ NEW BATTLE OPENED Battle ID: ${battle.id} Nofts: ${battle.nofts.join(', ')} Time: ${battle.timestamp}`);
 });
 api.getEvents().on('start_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`Battle started: ${JSON.stringify(battle)}`);
+  await channel.send(`💥 BATTLE ${battle.id} STARTED. BETS ARE CLOSED`);
 });
 api.getEvents().on('finish_battle', async battle => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`Battle finished: ${JSON.stringify(battle)}`);
+  await channel.send(`🏆 BATTLE ${battle.id} FINISHED. Winner: ${battle.scores[0].noft_id} Record: https://dev.noftgames.io/game`);
 });
-api.getEvents().on('new_bet', async battle => {
+api.getEvents().on('new_bet', async bet => {
+  let channel = client.channels.cache.get('891253162017693750');
+  await channel.send(`New bet: ${JSON.stringify(bet)}`);
+});
+api.getEvents().on('bet_processed', async bet => {
+  let channel = client.channels.cache.get('891253162017693750');
+  await channel.send(`: ${JSON.stringify(bet)}`);
+});
+api.getEvents().on('bet_paid', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
   await channel.send(`New bet: ${JSON.stringify(bet)}`);
 });

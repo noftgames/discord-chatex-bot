@@ -24,6 +24,10 @@ async function auth() {
     },
     async payout(chatex_id, coin, amount) {
       await apiPost(accessToken, '/wallet/transfers', {coin, amount, recipient: chatex_id, second_factor: {mode: 'PIN', code: '1111'}})
+    },
+    async checkLogin(login) {
+      let data = await apiPost(accessToken, '/addresses/check', {coin: 'BTC', address: login});
+      return data.type === 'INTERNAL' && data.is_valid;
     }
 
   }
