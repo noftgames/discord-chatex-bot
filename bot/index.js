@@ -55,7 +55,7 @@ client.on('interactionCreate', async interaction => {
       const id = interaction.options.getString('noft_id');
       const noft = await api.getNoftById(id);
       data = noft ?
-        `${randomHeart()} Noft ${id} Abilities: (Vitality: ${noft.abilities.vitality} Vision: ${noft.abilities.vision} Power: ${noft.abilities.power} Agility: ${noft.abilities.agility} Speed: ${noft.abilities.speed}  Luck: ${noft.abilities.luck})` :
+        `${randomHeart()} Noft ${id} Abilities: (Vitality: ${noft.abilities.Vitality} Vision: ${noft.abilities.Vision} Power: ${noft.abilities.Power} Agility: ${noft.abilities.Agility} Speed: ${noft.abilities.Speed}  Luck: ${noft.abilities.Luck})` :
         `⛔️ There is no noft with this ID. Check the list of nofts with the /open_battles`
       break;
     case 'bet':
