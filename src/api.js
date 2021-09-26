@@ -119,8 +119,9 @@ const api = {
   async saveChatexId(discord_id, chatex_id) {
     let found = await api.getUserByDiscord(discord_id);
     if (!found) await api.makeUser(discord_id);
-
-    let ok = await chatexObj.checkLogin(interaction.options.getString('chatex_id'));
+    
+    chatexObj = chatexObj || (await chatex.auth());
+    let ok = await chatexObj.checkLogin(chatex_id);
     if (!ok) {
       throw 'This chatex ID doesn\'t exists';
     }
