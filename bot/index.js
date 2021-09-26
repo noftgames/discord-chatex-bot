@@ -110,14 +110,14 @@ api.getEvents().on('finish_battle', async battle => {
   await channel.send(`🏆 BATTLE ${battle.id} FINISHED. Winner: ${battle.scores[0].noft_id} Record: https://dev.noftgames.io/game`);
 });
 api.getEvents().on('new_bet', async bet => {
-  let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`New bet: ${JSON.stringify(bet)}`);
+  // let channel = client.channels.cache.get('891253162017693750');
+  // await channel.send(`New bet: ${JSON.stringify(bet)}`);
 });
 api.getEvents().on('bet_processed', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`: ${JSON.stringify(bet)}`);
+  await channel.send(`🧾 BANK GOT BET ${bet.id} for battle ${bet.battle_id}. Bet: ${bet.amount}`);
 });
 api.getEvents().on('bet_paid', async bet => {
   let channel = client.channels.cache.get('891253162017693750');
-  await channel.send(`New bet: ${JSON.stringify(bet)}`);
+  await channel.send(`🤑 AWARD for battle ${bet.battle_id} HAVE BEEN PAID`);
 });
