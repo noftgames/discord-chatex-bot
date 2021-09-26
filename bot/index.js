@@ -22,7 +22,7 @@ client.on('interactionCreate', async interaction => {
       try {
         await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
       } catch (err) {
-        data = '❌ This chatex ID doesn\'t exists';
+        data = '⛔️ This chatex ID doesn\'t exists';
         break;
       }
       data = '✅ Chatex ID has been saved.'
