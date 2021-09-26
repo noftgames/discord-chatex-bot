@@ -19,12 +19,12 @@ client.on('interactionCreate', async interaction => {
 
   switch (commandName) {
     case 'login':
-      let ok = await chatex.checkLogin(interaction.options.getString('chatex_id'));
-      if (!ok) {
+      try {
+        await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
+      } catch (err) {
         data = 'This chatex ID doesn\'t exists';
         break;
       }
-      await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
       data = 'Chatex ID has been saved.'
       break;
     case 'open_battles':
