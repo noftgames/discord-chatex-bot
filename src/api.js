@@ -31,7 +31,7 @@ const api = {
     let battleObj = {id, timestamp, status, nofts, scores};
     await storage.pushBattle(battleObj);
     events.emit('new_battle', battleObj);
-    bot.notifyNewBattle(battleObj);
+    await bot.notifyNewBattle(battleObj);
     return battleObj;
   },
   async startBattle(id) {
@@ -40,7 +40,7 @@ const api = {
     found.status = 'ONGOING';
     await storage.updateBattle(id, found);
     events.emit('start_battle', found);
-    bot.notifyBattleStarted(found);
+    await bot.notifyBattleStarted(found);
     return found;
   },
   async finishBattle(id, scores) {
@@ -66,7 +66,7 @@ const api = {
     }
 
     events.emit('finish_battle', found);
-    bot.notifyBattleFinished(found);
+    await bot.notifyBattleFinished(found);
     return found;
   },
   async getBattlesByNoft(noftId) {
@@ -140,7 +140,7 @@ const api = {
     }
     await storage.addBet(bet);
 
-    bot.notifyNewBet(bet);
+    await bot.notifyNewBet(bet);
 
     return bet;
   },
