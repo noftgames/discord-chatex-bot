@@ -80,7 +80,7 @@ client.on('interactionCreate', async interaction => {
       data = 'Command not found';
       break;
   }
-  await interaction.reply(JSON.stringify(data || {}, null, 2));
+  await interaction.reply(data);
 });
 
 client.login(token);
