@@ -22,6 +22,10 @@ const api = {
     let all = await storage.getBattles();
     return all.filter(item => item.status === 'OPEN');
   },
+
+  async getAllBattles() {
+    return storage.getBattles();
+  },
   async getBattleById(id) {
     let all = await storage.getBattles();
     return all.find(item => item.id === id);
@@ -44,7 +48,7 @@ const api = {
     let found = await api.getBattleById(id);
     if (!found) { console.error(`Battle ${id} not found...`); return; }
     found.status = 'FINISHED';
-    found.scores = [...scores];
+    found.scores = [...scores].sort((s1, s2) => s2.score - s1.score);
     await storage.updateBattle(id, found);
 
     let bets = (await api.getBetsByBattle(id)).filter(item => item.status === 'PROCESSED');
