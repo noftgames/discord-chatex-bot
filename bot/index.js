@@ -80,26 +80,24 @@ client.on('interactionCreate', async interaction => {
       data = 'Command not found';
       break;
   }
-  await interaction.reply(JSON.stringify(data || {}, null, 2));
+  await interaction.reply(data);
 });
 
 client.login(token);
 
-module.exports = {
-  async notifyNewBattle(battle) {
-    let channel = client.channels.cache.get('891253162017693750');
-    await channel.send(`New battle opened: ${JSON.stringify(battle)}`);
-  },
-  async notifyBattleStarted(battle) {
-    let channel = client.channels.cache.get('891253162017693750');
-    await channel.send(`Battle started: ${JSON.stringify(battle)}`);
-  },
-  async notifyBattleFinished(battle) {
-    let channel = client.channels.cache.get('891253162017693750');
-    await channel.send(`Battle finished: ${JSON.stringify(battle)}`);
-  },
-  async notifyNewBet(bet) {
-    let channel = client.channels.cache.get('891253162017693750');
-    await channel.send(`New bet: ${JSON.stringify(bet)}`);
-  }
-};
+api.getEvents().on('new_battle', async battle => {
+  let channel = client.channels.cache.get('891253162017693750');
+  await channel.send(`New battle opened: ${JSON.stringify(battle)}`);
+});
+api.getEvents().on('start_battle', async battle => {
+  let channel = client.channels.cache.get('891253162017693750');
+  await channel.send(`Battle started: ${JSON.stringify(battle)}`);
+});
+api.getEvents().on('finish_battle', async battle => {
+  let channel = client.channels.cache.get('891253162017693750');
+  await channel.send(`Battle finished: ${JSON.stringify(battle)}`);
+});
+api.getEvents().on('new_bet', async battle => {
+  let channel = client.channels.cache.get('891253162017693750');
+  await channel.send(`New bet: ${JSON.stringify(bet)}`);
+});

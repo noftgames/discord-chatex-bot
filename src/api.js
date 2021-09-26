@@ -3,7 +3,6 @@
 const axios = require('axios');
 const EventEmitter = require('events');
 
-const bot = require('../bot/index');
 const storage = require('./storage');
 const chatex = require('./chatex');
 let chatexObj = null;
@@ -31,7 +30,6 @@ const api = {
     let battleObj = {id, timestamp, status, nofts, scores};
     await storage.pushBattle(battleObj);
     events.emit('new_battle', battleObj);
-    await bot.notifyNewBattle(battleObj);
     return battleObj;
   },
   async startBattle(id) {
@@ -40,7 +38,6 @@ const api = {
     found.status = 'ONGOING';
     await storage.updateBattle(id, found);
     events.emit('start_battle', found);
-    await bot.notifyBattleStarted(found);
     return found;
   },
   async finishBattle(id, scores) {
@@ -66,7 +63,6 @@ const api = {
     }
 
     events.emit('finish_battle', found);
-    await bot.notifyBattleFinished(found);
     return found;
   },
   async getBattlesByNoft(noftId) {
@@ -139,9 +135,7 @@ const api = {
       id, user_discord_id, coin: 'BTC', amount, battle_id, noft_id, status: 'DRAFT', invoice_id: invoice.id, invoice_url: invoice.payment_url, prize: 0
     }
     await storage.addBet(bet);
-
-    await bot.notifyNewBet(bet);
-
+    events.emit('new_bet', bet);
     return bet;
   },
   async getBetsByUser(discord_id) {
@@ -177,6 +171,7 @@ const api = {
     if (ivoice.status === 'COMPLETED') {
       bet.status = 'PROCESSED';
       await storage.updateBet(bet.id, bet);
+      events.emit('bet_processed', bet);
     }
   },
   async payBetPrize(bet_id) {
@@ -191,7 +186,7 @@ const api = {
     bet.status = 'DONE';
     await storage.updateBet(bet_id, bet);
     await payout(user.chatex_id, 'BTC', bet.prize);
-
+    events.emit('bet_paid', bet);
     return true;
   }
 
