@@ -17,11 +17,15 @@ client.on('interactionCreate', async interaction => {
   let data;
 
   switch (commandName) {
-    case 'auth':
-      data = await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
+    case 'login':
+      await api.saveChatexId(interaction.user.id, interaction.options.getString('chatex_id'));
+      data = 'Chatex ID has been saved.'
       break;
     case 'battles':
-      data = await api.getOpenBattles();
+      const battles = await api.getOpenBattles();
+      data = battles.length ?
+        battles.reduce((cur, acc) => acc + `Battle ID: ${cur.id} Status: ${cur.status}`, '') :
+        'No battles available.';
       break;
     case 'battle':
       data = await api.getBattleById(interaction.options.getString('battle_id'));
