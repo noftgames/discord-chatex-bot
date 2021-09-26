@@ -1,19 +1,19 @@
 'use strict';
 
-const { Client, Intents } = require('discord.js');
-const { token } = require('./config.json');
+const {Client, Intents} = require('discord.js');
+const {token} = require('./config.json');
 const api = require('../src/api');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 
 client.once('ready', () => {
-	console.log('Bot is ready!');
+  console.log('Bot is ready!');
 });
 
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+  if (!interaction.isCommand()) return;
 
-	const { commandName } = interaction;
+  const {commandName} = interaction;
   let data;
 
   switch (commandName) {
@@ -24,12 +24,15 @@ client.on('interactionCreate', async interaction => {
     case 'open_battles':
       const battles = await api.getOpenBattles();
       data = battles.length ?
-        battles.reduce((acc, cur) => acc + `Battle ID: ${cur.id} Status: ${cur.status} Nofts ${battles.nofts.join(' ')}`) :
+        battles.reduce((acc, cur) => acc + `Battle ID: ${cur.id} Status: ${cur.status} Nofts ${cur.nofts.join(' ')}\n`, '') :
         'No battles available.';
       break;
     case 'battle':
       const battle = await api.getBattleById(interaction.options.getString('battle_id'));
-      if (!battle) return 'There is no match with this ID. Check the list of available matches with the command /open_battles'
+      if (!battle) {
+        data = 'There is no match with this ID. Check the list of available matches with the /open_battles'
+        break;
+      }
       const bets = await api.getBetsByBattle(battle.id);
       const sum = bets.reduce((acc, cur) => acc + cur, 0);
       data = battle.status === 'FINISHED' ?
@@ -41,16 +44,37 @@ client.on('interactionCreate', async interaction => {
       const noft = await api.getNoftById(id);
       data = noft ?
         `Noft ${id} Abilities: (Vitality: ${noft.abilities.vitality} Vision: ${noft.abilities.vision} Power: ${noft.abilities.power} Agility: ${noft.abilities.agility} Speed: ${noft.abilities.speed}  Luck: ${noft.abilities.luck})` :
-        `There is no noft with this ID. Check the list of nofts with the command /open_battles`
+        `There is no noft with this ID. Check the list of nofts with the /open_battles`
       break;
     case 'bet':
-      data = await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))
+      await api.makeBet(interaction.user.id, interaction.options.getString('battle_id'), interaction.options.getString('noft_id'), interaction.options.getString('amount'))
+      data = 'The bets has been sent to processing. Confirm it with Chatex'
       break;
     case 'my_bets':
-      data = await api.getBetsByUser(interaction.user.id);
+      const myBets = await api.getBetsByUser(interaction.user.id);
+      data = myBets.length ?
+        myBets.reduce((acc, cur) => acc + `${cur.id} Battle: ${cur.battle_id} Noft: ${cur.noft_id} Size: ${cur.amount} BTC\n`) :
+        "You haven't made any bets already. Make the first one with /bet";
       break;
     case 'get_prize':
-      data = await api.payBetPrize(interaction.options.getString('bet_id'));
+      const betId = interaction.options.getString('bet_id');
+      const bet = await api.getBetById(betId);
+      if (!bet) {
+        data = `There is no bet with this id. Check the list of your bets with /my_bets`;
+        break;
+      }
+      const betBattle = await api.getBattleById(bet.battle_id);
+      if (betBattle.status !== 'FINISHED') {
+        data = 'The match is not finished yet'
+        break;
+      }
+      if (!bet.noft_id !== betBattle.scores[0].noft_id) {
+        data = 'This bet hasn’t played. Try another one with /bet'
+        break;
+      }
+      data = await api.payBetPrize(betId);
+      data = 'Congrats! Chatex notificate you, when award will be proceed'
+
       break;
     default:
       data = 'Command not found';
